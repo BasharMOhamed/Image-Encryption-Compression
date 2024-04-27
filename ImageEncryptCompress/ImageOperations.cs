@@ -4,6 +4,7 @@ using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
+using System.IO;
 ///Algorithms Project
 ///Intelligent Scissors
 ///
@@ -164,7 +165,7 @@ namespace ImageEncryptCompress
             return result;
         }
 
-        public static RGBPixel[,] Encryption(RGBPixel[,] ImageMatrix, int TapPosition, string InitialSeed)
+        public static RGBPixel[,] Encryption_Decryption(RGBPixel[,] ImageMatrix, int TapPosition, string InitialSeed)
         {
             int Height = GetHeight(ImageMatrix);
             int Width = GetWidth(ImageMatrix);
@@ -187,7 +188,14 @@ namespace ImageEncryptCompress
             }
             return Filtered;
         }
-        public static void GenerateCode(ref int sum, Node node, string code, Dictionary<string,string> codes)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sum"></param>
+        /// <param name="node"></param>
+        /// <param name="code"></param>
+        /// <param name="codes"></param>
+        public static void GenerateCode(ref double sum, Node node, string code, Dictionary<string,string> codes)
         {
             
             if(node == null)
@@ -263,7 +271,6 @@ namespace ImageEncryptCompress
 
             public Node ExtractMin()
             {
-                Console.WriteLine("EXtract");
                 Node extracted = list[1];
                 list[1] = list[Size];
                 list.RemoveAt(Size);
@@ -312,7 +319,13 @@ namespace ImageEncryptCompress
                  return extracted;
             }
         }
-        public static void Compression(RGBPixel[,] ImageMatrix)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ImageMatrix"></param>
+        /// <param name="InitialSeed"></param>
+        /// <param name="TapPosition"></param>
+        public static void Compression(RGBPixel[,] ImageMatrix, string InitialSeed, int TapPosition,string path)
         {
             int Height = GetHeight(ImageMatrix);
             int Width = GetWidth(ImageMatrix);
@@ -411,14 +424,156 @@ namespace ImageEncryptCompress
             Node blueRoot = blueQueue.ExtractMin();
             Node greenRoot = greenQueue.ExtractMin();
 
-            int CompressionOutput = 0;
+            double CompressionOutput = 0;
             GenerateCode(ref CompressionOutput,redRoot, "", redCodes);
             GenerateCode(ref CompressionOutput, greenRoot, "", greenCodes);
             GenerateCode(ref CompressionOutput, blueRoot, "", blueCodes);
-            double ratio = ((double)(CompressionOutput / 8 * 100) / (double)(Height * Width * 3));
+            double ratio = ((double)(CompressionOutput / 8.0 * 100.0) / ((double)Height * (double)Width * 3.0));
             Console.WriteLine("The compression output: {0}  in bytes: {1} Ratio: {2}%", CompressionOutput, CompressionOutput / 8, Math.Round(ratio, 1));
 
+            Save(ImageMatrix, InitialSeed, TapPosition, redCodes, greenCodes, blueCodes, Height, Width, path);
+            
 
+
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ImageMatrix"></param>
+        /// <param name="InitialSeed"></param>
+        /// <param name="TapPosition"></param>
+        /// <param name="redCodes"></param>
+        /// <param name="greenCodes"></param>
+        /// <param name="blueCodes"></param>
+        /// <param name="Height"></param>
+        /// <param name="Width"></param>
+        public static void Save(RGBPixel[,] ImageMatrix, string InitialSeed, int TapPosition,
+            Dictionary<string,string> redCodes, Dictionary<string, string> greenCodes,
+            Dictionary<string, string> blueCodes,int Height, int Width, string path)
+        {
+            //string Path = @"G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Sample Test\Compressed\output.bin";
+            FileStream fs = new FileStream(path, FileMode.Create);
+            BinaryWriter bw = new BinaryWriter(fs);
+
+            bw.Write(InitialSeed);
+            bw.Write(TapPosition);
+
+            bw.Write(redCodes.Count);
+            foreach (var red in redCodes)
+            {
+                bw.Write(red.Value);
+                bw.Write(red.Key);
+            }
+
+            bw.Write(greenCodes.Count);
+            foreach (var green in greenCodes)
+            {
+                bw.Write(green.Value);
+                bw.Write(green.Key);
+            }
+
+            bw.Write(blueCodes.Count);
+            foreach (var blue in blueCodes)
+            {
+                bw.Write(blue.Value);
+                bw.Write(blue.Key);
+            }
+
+            bw.Write(Height);
+            bw.Write(Width);
+            for (int i = 0; i < Height; i++)
+            {
+                for (int j = 0; j < Width; j++)
+                {
+                    bw.Write(redCodes[ImageMatrix[i, j].red.ToString()]);
+                    bw.Write(greenCodes[ImageMatrix[i, j].green.ToString()]);
+                    bw.Write(blueCodes[ImageMatrix[i, j].blue.ToString()]);
+                }
+            }
+
+            bw.Close();
+            fs.Close();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redCodes"></param>
+        /// <param name="greenCodes"></param>
+        /// <param name="blueCodes"></param>
+        /// <param name="InitialSeed"></param>
+        /// <param name="TapPosition"></param>
+        /// <param name="br"></param>
+        public static void Load(ref Dictionary<string, string> redCodes, ref Dictionary<string, string> greenCodes, ref Dictionary<string, string> blueCodes, ref string InitialSeed, ref int TapPosition, BinaryReader br)
+        {
+            
+
+            InitialSeed = br.ReadString();
+            TapPosition = br.ReadInt32();
+
+            int count = br.ReadInt32();
+            for (int i = 0; i < count; i++)
+            {
+                redCodes[br.ReadString()] = br.ReadString();
+            }
+            count = br.ReadInt32();
+            for (int i = 0; i < count; i++)
+            {
+                greenCodes[br.ReadString()] = br.ReadString();
+            }
+            count = br.ReadInt32();
+            for (int i = 0; i < count; i++)
+            {
+                blueCodes[br.ReadString()] = br.ReadString();
+            }
+
+            
+        }
+        /// <summary>
+        /// Load The Huffman Trees from the binary file, then Load The compressed image into image
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="InitialSeed"></param>
+        /// <param name="TapPosition"></param>
+        /// <returns></returns>
+        public static RGBPixel[,] Load_Decompression(string path, ref string InitialSeed, ref int TapPosition)
+        {
+            Dictionary<string, string> redCodes = new Dictionary<string, string>();
+            Dictionary<string, string> greenCodes = new Dictionary<string, string>();
+            Dictionary<string, string> blueCodes = new Dictionary<string, string>();
+            
+            FileStream fs = new FileStream(path, FileMode.Open);
+            BinaryReader br = new BinaryReader(fs);
+            Load(ref redCodes, ref greenCodes, ref blueCodes, ref InitialSeed, ref TapPosition, br);
+            return Decompression(redCodes, greenCodes, blueCodes, fs, br);
+        }
+        /// <summary>
+        /// Read the Compressed Image from the binary file and store it into Image
+        /// </summary>
+        /// <param name="redCodes">Dictionary to store the red Tree</param>
+        /// <param name="greenCodes">Dictionary to store the green Tree</param>
+        /// <param name="blueCodes">Dictionary to store the blue Tree</param>
+        /// <param name="fs">FileStream with the path of the file that you read</param>
+        /// <param name="br">BinaryReader</param>
+        /// <returns></returns>
+        public static RGBPixel[,] Decompression(Dictionary<string, string> redCodes, Dictionary<string, string> greenCodes, Dictionary<string, string> blueCodes, FileStream fs, BinaryReader br)
+        {
+         
+            int Height = br.ReadInt32();
+            int Width = br.ReadInt32();
+
+            RGBPixel[,] ImageMatrix = new RGBPixel[Height, Width];
+            for (int i = 0; i < Height; i++)
+            {
+                for (int j = 0; j < Width; j++)
+                {
+                    ImageMatrix[i, j].red = byte.Parse(redCodes[br.ReadString()]);
+                    ImageMatrix[i, j].green = byte.Parse(greenCodes[br.ReadString()]);
+                    ImageMatrix[i, j].blue = byte.Parse(blueCodes[br.ReadString()]);
+                }
+            }
+            br.Close();
+            fs.Close();
+            return ImageMatrix;
         }
         /// <summary>
         /// Apply Gaussian smoothing filter to enhance the edge detection 
@@ -427,13 +582,13 @@ namespace ImageEncryptCompress
         /// <param name="filterSize">Gaussian mask size</param>
         /// <param name="sigma">Gaussian sigma</param>
         /// <returns>smoothed color image</returns>
-        public static RGBPixel[,] Encryption_Compression(RGBPixel[,] ImageMatrix, int TapPosition, string InitialSeed)
+        /*public static RGBPixel[,] Encryption_Compression(RGBPixel[,] ImageMatrix, int TapPosition, string InitialSeed, string path)
         {
-            RGBPixel[,] encrypted = Encryption(ImageMatrix, TapPosition, InitialSeed);
-            Compression(encrypted);
-
-            return Encryption(ImageMatrix, TapPosition, InitialSeed);
-        }
+            RGBPixel[,] encrypted = Encryption_Decryption(ImageMatrix, TapPosition, InitialSeed);
+            Compression(encrypted, InitialSeed, TapPosition, path);
+            
+            return encrypted;
+        }*/
 
 
     }

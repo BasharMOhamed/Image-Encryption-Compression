@@ -19,3 +19,13 @@ G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startu
 G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startup Code\[TEMPLATE] ImageEncryptCompress\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.csproj.CoreCompileInputs.cache
 G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startup Code\[TEMPLATE] ImageEncryptCompress\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.exe
 G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startup Code\[TEMPLATE] ImageEncryptCompress\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.pdb
+G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startup Code\Image-Encryption-Compression\ImageEncryptCompress\bin\Debug\ImageEncryptCompress.exe.config
+G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startup Code\Image-Encryption-Compression\ImageEncryptCompress\bin\Debug\ImageEncryptCompress.exe
+G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startup Code\Image-Encryption-Compression\ImageEncryptCompress\bin\Debug\ImageEncryptCompress.pdb
+G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startup Code\Image-Encryption-Compression\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.csproj.AssemblyReference.cache
+G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startup Code\Image-Encryption-Compression\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.MainForm.resources
+G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startup Code\Image-Encryption-Compression\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.Properties.Resources.resources
+G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startup Code\Image-Encryption-Compression\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.csproj.GenerateResource.cache
+G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startup Code\Image-Encryption-Compression\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.csproj.CoreCompileInputs.cache
+G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startup Code\Image-Encryption-Compression\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.exe
+G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startup Code\Image-Encryption-Compression\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.pdb
