@@ -430,7 +430,7 @@ namespace ImageEncryptCompress
             GenerateCode(ref CompressionOutput, blueRoot, "", blueCodes);
             double ratio = ((double)(CompressionOutput / 8.0 * 100.0) / ((double)Height * (double)Width * 3.0));
             Console.WriteLine("The compression output: {0}  in bytes: {1} Ratio: {2}%", CompressionOutput, CompressionOutput / 8, Math.Round(ratio, 1));
-
+            
             Save(ImageMatrix, InitialSeed, TapPosition, redCodes, greenCodes, blueCodes, Height, Width, path);
             
 
@@ -461,34 +461,80 @@ namespace ImageEncryptCompress
             bw.Write(redCodes.Count);
             foreach (var red in redCodes)
             {
-                bw.Write(red.Value);
-                bw.Write(red.Key);
-            }
+                Console.WriteLine("value: {0}", red.Value);
+                Console.WriteLine("Key: {0}", red.Key);
+                /*Console.WriteLine("1- {0}", Convert.ToByte(red.Value, 2));
+                Console.WriteLine("2- {0}", Convert.ToByte(int.Parse(red.Key)));*/
 
+                bw.Write(red.Value);
+                bw.Write(Convert.ToByte(int.Parse(red.Key)));
+            }
+            Console.WriteLine("one");
             bw.Write(greenCodes.Count);
             foreach (var green in greenCodes)
             {
+                //bw.Write(Convert.ToByte(green.Value ,2));
                 bw.Write(green.Value);
-                bw.Write(green.Key);
+                bw.Write(Convert.ToByte(int.Parse(green.Key)));
             }
-
+            Console.WriteLine("two");
             bw.Write(blueCodes.Count);
             foreach (var blue in blueCodes)
             {
                 bw.Write(blue.Value);
-                bw.Write(blue.Key);
+                bw.Write(Convert.ToByte(int.Parse(blue.Key)));
             }
-
+            Console.WriteLine("three");
             bw.Write(Height);
             bw.Write(Width);
+            string value, buffer = "";
+            
             for (int i = 0; i < Height; i++)
             {
                 for (int j = 0; j < Width; j++)
                 {
-                    bw.Write(redCodes[ImageMatrix[i, j].red.ToString()]);
-                    bw.Write(greenCodes[ImageMatrix[i, j].green.ToString()]);
-                    bw.Write(blueCodes[ImageMatrix[i, j].blue.ToString()]);
+                    value = redCodes[ImageMatrix[i, j].red.ToString()];
+                    for (int k=0;k< value.Length; k++)
+                    {
+                        buffer += value[k];
+                        if(buffer.Length == 8)
+                        {
+                            /*Console.WriteLine("buffer: {0}", buffer);*/
+                            bw.Write(Convert.ToByte(buffer , 2));
+                            buffer = "";
+                        }
+                    }
+                    value = greenCodes[ImageMatrix[i, j].green.ToString()];
+                    for (int k = 0; k < value.Length; k++)
+                    {
+                        buffer += value[k];
+                        if (buffer.Length == 8)
+                        {
+                            /*Console.WriteLine("buffer: {0}", buffer);*/
+                            bw.Write(Convert.ToByte(buffer, 2));
+                            buffer = "";
+                        }
+                    }
+                    value = blueCodes[ImageMatrix[i, j].blue.ToString()];
+                    for (int k = 0; k < value.Length; k++)
+                    {
+                        buffer += value[k];
+                        if (buffer.Length == 8)
+                        {
+                            /*Console.WriteLine("buffer: {0}", buffer);*/
+                            bw.Write(Convert.ToByte(buffer, 2));
+                            buffer = "";
+                        }
+                    }
+                    /*bw.Write(Convert.ToByte(int.Parse(redCodes[ImageMatrix[i, j].red.ToString()])));
+                    bw.Write(Convert.ToByte(int.Parse(greenCodes[ImageMatrix[i, j].green.ToString()])));
+                    bw.Write(Convert.ToByte(int.Parse(blueCodes[ImageMatrix[i, j].blue.ToString()])));*/
                 }
+            }
+            Console.WriteLine(buffer.Length);
+            if(buffer.Length > 0)
+            {
+                bw.Write(Convert.ToByte(buffer, 2));
             }
 
             bw.Close();

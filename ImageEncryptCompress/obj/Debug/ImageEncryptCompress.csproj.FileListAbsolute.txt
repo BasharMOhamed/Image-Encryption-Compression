@@ -29,3 +29,13 @@ G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startu
 G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startup Code\Image-Encryption-Compression\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.csproj.CoreCompileInputs.cache
 G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startup Code\Image-Encryption-Compression\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.exe
 G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Startup Code\Image-Encryption-Compression\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.pdb
+F:\3rd Year\Second Term\Algo\Project\Image-Encryption-Compression\ImageEncryptCompress\bin\Debug\ImageEncryptCompress.exe.config
+F:\3rd Year\Second Term\Algo\Project\Image-Encryption-Compression\ImageEncryptCompress\bin\Debug\ImageEncryptCompress.exe
+F:\3rd Year\Second Term\Algo\Project\Image-Encryption-Compression\ImageEncryptCompress\bin\Debug\ImageEncryptCompress.pdb
+F:\3rd Year\Second Term\Algo\Project\Image-Encryption-Compression\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.csproj.AssemblyReference.cache
+F:\3rd Year\Second Term\Algo\Project\Image-Encryption-Compression\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.MainForm.resources
+F:\3rd Year\Second Term\Algo\Project\Image-Encryption-Compression\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.Properties.Resources.resources
+F:\3rd Year\Second Term\Algo\Project\Image-Encryption-Compression\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.csproj.GenerateResource.cache
+F:\3rd Year\Second Term\Algo\Project\Image-Encryption-Compression\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.csproj.CoreCompileInputs.cache
+F:\3rd Year\Second Term\Algo\Project\Image-Encryption-Compression\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.exe
+F:\3rd Year\Second Term\Algo\Project\Image-Encryption-Compression\ImageEncryptCompress\obj\Debug\ImageEncryptCompress.pdb

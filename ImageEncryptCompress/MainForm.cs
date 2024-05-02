@@ -64,7 +64,7 @@ namespace ImageEncryptCompress
         {
             /*TapPostion = (int)nudMaskSize.Value;
             InitialSeed = txtGaussSigma.Text;*/
-            string path = $@"G:\Algo Projects\MATERIALS\MATERIALS\[1] Image Encryption and Compression\Sample Test\Compressed\{FileName.Text}.bin";
+            string path = $@"F:\3rd Year\Second Term\Algo\Project\Compressed Files\{FileName.Text}.bin";
             ImageOperations.Compression(ImageMatrix, InitialSeed, TapPostion, path);
         }
 
