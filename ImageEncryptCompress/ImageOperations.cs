@@ -461,15 +461,14 @@ namespace ImageEncryptCompress
             bw.Write(redCodes.Count);
             foreach (var red in redCodes)
             {
-                Console.WriteLine("value: {0}", red.Value);
-                Console.WriteLine("Key: {0}", red.Key);
+                /*Console.WriteLine("value: {0}", red.Value);
+                Console.WriteLine("Key: {0}", red.Key);*/
                 /*Console.WriteLine("1- {0}", Convert.ToByte(red.Value, 2));
                 Console.WriteLine("2- {0}", Convert.ToByte(int.Parse(red.Key)));*/
 
                 bw.Write(red.Value);
                 bw.Write(Convert.ToByte(int.Parse(red.Key)));
             }
-            Console.WriteLine("one");
             bw.Write(greenCodes.Count);
             foreach (var green in greenCodes)
             {
@@ -477,14 +476,14 @@ namespace ImageEncryptCompress
                 bw.Write(green.Value);
                 bw.Write(Convert.ToByte(int.Parse(green.Key)));
             }
-            Console.WriteLine("two");
+
             bw.Write(blueCodes.Count);
             foreach (var blue in blueCodes)
             {
                 bw.Write(blue.Value);
                 bw.Write(Convert.ToByte(int.Parse(blue.Key)));
             }
-            Console.WriteLine("three");
+            
             bw.Write(Height);
             bw.Write(Width);
             string value, buffer = "";
