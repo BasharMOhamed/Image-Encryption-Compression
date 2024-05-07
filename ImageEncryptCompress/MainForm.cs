@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace ImageEncryptCompress
 {
@@ -36,7 +37,11 @@ namespace ImageEncryptCompress
         {
             TapPostion = (int)nudMaskSize.Value ;
             InitialSeed = txtGaussSigma.Text;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             ImageMatrix = ImageOperations.Encryption_Decryption(ImageMatrix, TapPostion, InitialSeed);
+            sw.Stop();
+            Console.WriteLine("Encryption Time elapsed: {0:hh\\:mm\\:ss\\.fff}", sw.Elapsed);
             ImageOperations.DisplayImage(ImageMatrix, pictureBox2);
         }
 
@@ -47,7 +52,11 @@ namespace ImageEncryptCompress
             {
                 //Open the browsed image and display it
                 string OpenedFilePath = openFileDialog2.FileName;
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
                 ImageMatrix = ImageOperations.Load_Decompression(OpenedFilePath, ref InitialSeed, ref TapPostion);
+                sw.Stop();
+                Console.WriteLine("Load & Decompression Time elapsed: {0:hh\\:mm\\:ss\\.fff}", sw.Elapsed);
                 ImageOperations.DisplayImage(ImageMatrix, pictureBox1);
             }
             txtWidth.Text = ImageOperations.GetWidth(ImageMatrix).ToString();
@@ -56,16 +65,28 @@ namespace ImageEncryptCompress
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             ImageMatrix = ImageOperations.Encryption_Decryption(ImageMatrix, TapPostion, InitialSeed);
+            sw.Stop();
+            Console.WriteLine("Decryption Time elapsed: {0:hh\\:mm\\:ss\\.fff}", sw.Elapsed);
             ImageOperations.DisplayImage(ImageMatrix, pictureBox2);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            /*TapPostion = (int)nudMaskSize.Value;
-            InitialSeed = txtGaussSigma.Text;*/
+            if(InitialSeed == "")
+            {
+                TapPostion = (int)nudMaskSize.Value;
+                InitialSeed = txtGaussSigma.Text;
+            }
             string path = $@"F:\3rd Year\Second Term\Algo\Project\Compressed Files\{FileName.Text}.bin";
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             ImageOperations.Compression(ImageMatrix, InitialSeed, TapPostion, path);
+            sw.Stop();
+            Console.WriteLine("Compression Time elapsed: {0:hh\\:mm\\:ss\\.fff}", sw.Elapsed);
         }
 
         private void FileName_TextChanged(object sender, EventArgs e)
