@@ -56,7 +56,7 @@ namespace ImageEncryptCompress
                 sw.Start();
                 ImageMatrix = ImageOperations.Load_Decompression(OpenedFilePath, ref InitialSeed, ref TapPostion);
                 sw.Stop();
-                Console.WriteLine("Load & Decompression Time elapsed: {0:hh\\:mm\\:ss\\.fff}", sw.Elapsed);
+                Console.WriteLine("Load & Decompression Time elapsed: {0:hh\\:mm\\:ss\\:fff}", sw.Elapsed);
                 ImageOperations.DisplayImage(ImageMatrix, pictureBox1);
             }
             txtWidth.Text = ImageOperations.GetWidth(ImageMatrix).ToString();
@@ -69,7 +69,7 @@ namespace ImageEncryptCompress
             sw.Start();
             ImageMatrix = ImageOperations.Encryption_Decryption(ImageMatrix, TapPostion, InitialSeed);
             sw.Stop();
-            Console.WriteLine("Decryption Time elapsed: {0:hh\\:mm\\:ss\\.fff}", sw.Elapsed);
+            Console.WriteLine("Decryption Time elapsed: {0:hh\\:mm\\:ss\\:fff}", sw.Elapsed);
             ImageOperations.DisplayImage(ImageMatrix, pictureBox2);
         }
 
@@ -86,7 +86,7 @@ namespace ImageEncryptCompress
             sw.Start();
             ImageOperations.Compression(ImageMatrix, InitialSeed, TapPostion, path);
             sw.Stop();
-            Console.WriteLine("Compression Time elapsed: {0:hh\\:mm\\:ss\\.fff}", sw.Elapsed);
+            Console.WriteLine("Compression Time elapsed: {0:hh\\:mm\\:ss\\:fff}", sw.Elapsed);
         }
 
         private void FileName_TextChanged(object sender, EventArgs e)

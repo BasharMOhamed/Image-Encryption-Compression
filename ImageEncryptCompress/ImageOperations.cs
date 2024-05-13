@@ -156,14 +156,14 @@ namespace ImageEncryptCompress
         public static string getPass(int TapPosition, ref string InitialSeed)
         {
             string XOR;
-            StringBuilder sb = new StringBuilder();
+            string result = "";
             for (int i = 0; i < 8; i++)
             {
                 XOR = InitialSeed[0] == InitialSeed[InitialSeed.Length - TapPosition - 1] ? "0" : "1";
-                sb.Append(XOR);
+                result += XOR;
                 InitialSeed = InitialSeed.Substring(1) + XOR; // O(K)
             }
-            return sb.ToString();
+            return result;
         }
 
         public static RGBPixel[,] Encryption_Decryption(RGBPixel[,] ImageMatrix, int TapPosition, string InitialSeed)
@@ -436,7 +436,7 @@ namespace ImageEncryptCompress
             sw.Start();
             Save(ImageMatrix, InitialSeed, TapPosition, redfreq, greenfreq, bluefreq, Height, Width, path, redCodes, greenCodes, blueCodes) ;
             sw.Stop();
-            Console.WriteLine("Save Time elapsed: {0:hh\\:mm\\:ss}", sw.Elapsed);
+            Console.WriteLine("Save Time elapsed: {0:hh\\:mm\\:ss\\:fff}", sw.Elapsed);
 
 
         }
@@ -552,7 +552,7 @@ namespace ImageEncryptCompress
         /// <param name="InitialSeed"></param>
         /// <param name="TapPosition"></param>
         /// <param name="br"></param>
-        public static List<Node> Load(ref string InitialSeed, ref int TapPosition, string path, ref string compressedImage, ref int Height, ref int Width)
+        public static List<Node> Load(ref string InitialSeed, ref int TapPosition, string path,ref string compressedImage, ref int Height, ref int Width)
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -616,7 +616,7 @@ namespace ImageEncryptCompress
                 greenQueue.Enqueue(node);
 
             }
-            StringBuilder sb= new StringBuilder();
+            /*StringBuilder sb= new StringBuilder();*/
 
             Height = br.ReadInt32();
             Width = br.ReadInt32();
@@ -625,16 +625,30 @@ namespace ImageEncryptCompress
             Console.WriteLine("The First Part of Load Time elapsed: {0:hh\\:mm\\:ss\\:fff}", sw.Elapsed);
             sw.Restart();
             // O(N^2)
-            while (br.BaseStream.Position != br.BaseStream.Length)
+            /*while (br.BaseStream.Position != br.BaseStream.Length)
             {
                 sb.Append(Convert.ToString(br.ReadByte(), 2).PadLeft(8, '0'));
-            }
+            }*/
+            const int ChunkSize = 4096;
+            byte[] buffer = new byte[ChunkSize];
+            int bytesRead;
+            StringBuilder sb = new StringBuilder();
 
+            while ((bytesRead = br.BaseStream.Read(buffer, 0, ChunkSize)) > 0)
+            {
+                for (int i = 0; i < bytesRead; i++)
+                {
+                    sb.Append(Convert.ToString(buffer[i], 2).PadLeft(8, '0'));
+                    /*Console.WriteLine(compressedImage.Length);
+                    compressedImage += Convert.ToString(buffer[i], 2).PadLeft(8, '0');*/
+                }
+            }
+            /*Console.WriteLine(int.MaxValue);*/
             br.Close();
             fs.Close();
 
             Console.WriteLine("The Second Part (Before) of Load Time elapsed: {0:hh\\:mm\\:ss\\:fff}", sw.Elapsed);
-
+            /*Console.WriteLine("The length: {0}", sb.Length);*/
             compressedImage = sb.ToString();
 
             sw.Stop();
@@ -655,7 +669,7 @@ namespace ImageEncryptCompress
         public static RGBPixel[,] Load_Decompression(string path, ref string InitialSeed, ref int TapPosition)
         {
             string compressedImage = "";
-            /*StringBuilder sb = new StringBuilder()*/
+            StringBuilder sb = new StringBuilder();
             int Height = 0;
             int Width = 0;
             Stopwatch sw = new Stopwatch();
@@ -682,6 +696,7 @@ namespace ImageEncryptCompress
             {
                 for (int j = 0; j < Width; j++)
                 {
+                    
                     ImageMatrix[i, j].red = getFromTree(redRoot, compressedImage, ref index);
                     ImageMatrix[i, j].green = getFromTree(greenRoot, compressedImage, ref index);
                     ImageMatrix[i, j].blue = getFromTree(blueRoot, compressedImage, ref index);
@@ -716,6 +731,7 @@ namespace ImageEncryptCompress
                 }
                 index++;
             }
+
             return byte.Parse(ptr.Data);
         }
 
