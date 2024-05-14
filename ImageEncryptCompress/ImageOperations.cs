@@ -634,35 +634,48 @@ namespace ImageEncryptCompress
                 sb.Append(Convert.ToString(br.ReadByte(), 2).PadLeft(8, '0'));
             }*/
 
-            const int ChunkSize = 4096;
+            /*const int ChunkSize = 4096;
             byte[] buffer = new byte[ChunkSize];
-            int bytesRead;
+            int bytesRead;*/
             StringBuilder sb = new StringBuilder();
             /*byte[] bytes = Encoding.ASCII.GetBytes(sb.ToString());*/
             long remainingLength = br.BaseStream.Length - br.BaseStream.Position;
             /*bytes = new byte[remainingLength];*/
             /*byteBlock = new List<string>();*/
-            int index = 0;
-            while ((bytesRead = br.BaseStream.Read(buffer, 0, ChunkSize)) > 0)
+            /*int index = 0;
+            Console.WriteLine("The remainig: {0} :   {1}", remainingLength, remainingLength % 4096);*/
+            /*while ((bytesRead = br.BaseStream.Read(buffer, 0, ChunkSize)) > 0)
             {
                 
                 for (int i = 0; i < bytesRead; i++)
                 {
-                    /*bytes[index * ChunkSize + i] = buffer[i];*/
+                    *//*bytes[index * ChunkSize + i] = buffer[i];*//*
                     byteBlock.Add(Convert.ToString(buffer[i], 2).PadLeft(8, '0'));
-                    /*sb.Append(Convert.ToString(buffer[i], 2).PadLeft(8, '0'));*/
-                    /*Console.WriteLine(compressedImage.Length);
-                    compressedImage += Convert.ToString(buffer[i], 2).PadLeft(8, '0');*/
-                }
-                index++;
-            }
-            byteBlock.RemoveAt(byteBlock.Count - 1);
-            byteBlock.Add(Convert.ToString(buffer[buffer.Length - 1], 2));
-            /*int start = sb.Length - 8;
-            int length = 8 - bits;
-            Console.WriteLine("Length: {0} bits: {1}", length, bits);*/
-            /*sb.Remove(start, length);*/
+                    *//*sb.Append(Convert.ToString(buffer[i], 2).PadLeft(8, '0'));*/
+            /*Console.WriteLine(compressedImage.Length);
+            compressedImage += Convert.ToString(buffer[i], 2).PadLeft(8, '0');*//*
+        }
+    }
+    Console.WriteLine("Buffer: {0}", Convert.ToString(buffer[buffer.Length - 1], 2));
+    byteBlock.RemoveAt(byteBlock.Count - 1);
+    byteBlock.Add(Convert.ToString(buffer[buffer.Length - 1], 2));*/
             
+            /*Console.WriteLine("Length: {0} bits: {1}", length, bits);*/
+            /*sb.Remove(start, length);*/
+            for (long i = 0; i < remainingLength / 2; i++)
+            {
+                sb.Append(Convert.ToString(br.ReadByte(), 2).PadLeft(8, '0'));
+            }
+            byteBlock.Add(sb.ToString());
+            sb.Clear();
+            for(long i = remainingLength / 2; i < remainingLength; i++)
+            {
+                sb.Append(Convert.ToString(br.ReadByte(), 2).PadLeft(8, '0'));
+            }
+            int start = sb.Length - 8;
+            int length = 8 - bits;
+            sb.Remove(start, length);
+            byteBlock.Add(sb.ToString());
             br.Close();
             fs.Close();
 
@@ -733,9 +746,10 @@ namespace ImageEncryptCompress
 
         public static byte getFromTree(Node ptr, string compressedImage,ref int index, List<string> byteBlock)
         {
-            while (true)
+            
+            while (index < byteBlock[0].Length + byteBlock[1].Length)
             {
-                if (byteBlock[index / 8][index % 8] == '1')
+                if (byteBlock[index / byteBlock[0].Length][index % byteBlock[0].Length] == '1')
                 {
                     if (ptr.right == null)
                     {
