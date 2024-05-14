@@ -659,22 +659,24 @@ namespace ImageEncryptCompress
     Console.WriteLine("Buffer: {0}", Convert.ToString(buffer[buffer.Length - 1], 2));
     byteBlock.RemoveAt(byteBlock.Count - 1);
     byteBlock.Add(Convert.ToString(buffer[buffer.Length - 1], 2));*/
-            
-            /*Console.WriteLine("Length: {0} bits: {1}", length, bits);*/
+
             /*sb.Remove(start, length);*/
-            for (long i = 0; i < remainingLength / 2; i++)
+            for (long i = remainingLength -1; i >= remainingLength / 2; i--)
             {
                 sb.Append(Convert.ToString(br.ReadByte(), 2).PadLeft(8, '0'));
             }
             byteBlock.Add(sb.ToString());
             sb.Clear();
-            for(long i = remainingLength / 2; i < remainingLength; i++)
+            for(long i = (remainingLength / 2) - 1; i >= 0; i--)
             {
                 sb.Append(Convert.ToString(br.ReadByte(), 2).PadLeft(8, '0'));
             }
             int start = sb.Length - 8;
             int length = 8 - bits;
+            Console.WriteLine("start: {2} Length: {0} bits: {1}", length, bits, start);
+            Console.WriteLine("Sb length before: {0}", sb.Length);
             sb.Remove(start, length);
+            Console.WriteLine("Sb length after: {0}", sb.Length);
             byteBlock.Add(sb.ToString());
             br.Close();
             fs.Close();
@@ -746,9 +748,10 @@ namespace ImageEncryptCompress
 
         public static byte getFromTree(Node ptr, string compressedImage,ref int index, List<string> byteBlock)
         {
-            
+
             while (index < byteBlock[0].Length + byteBlock[1].Length)
             {
+                
                 if (byteBlock[index / byteBlock[0].Length][index % byteBlock[0].Length] == '1')
                 {
                     if (ptr.right == null)
