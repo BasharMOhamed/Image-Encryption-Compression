@@ -434,11 +434,9 @@ namespace ImageEncryptCompress
             Console.WriteLine("The compression output: {0}  in bytes: {1} Ratio: {2}%", CompressionOutput,comp, Math.Round(ratio, 1));
             byte bits = Convert.ToByte((comp - Math.Floor(comp)) * 8);
 
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+            
+            
             Save(ImageMatrix, InitialSeed, TapPosition, redfreq, greenfreq, bluefreq, Height, Width, path, redCodes, greenCodes, blueCodes, bits) ;
-            sw.Stop();
-            Console.WriteLine("Save Time elapsed: {0:hh\\:mm\\:ss\\:fff}", sw.Elapsed);
 
 
         }
@@ -466,7 +464,7 @@ namespace ImageEncryptCompress
             bw.Write(TapPosition);
             
             bw.Write(Convert.ToByte(redfreq.Count - 1));
-
+            
             // 3 C
             foreach (var red in redfreq)
             {
@@ -506,7 +504,6 @@ namespace ImageEncryptCompress
                         buffer += value[k];
                         if(buffer.Length == 8)
                         {
-                            /*Console.WriteLine("buffer: {0}", buffer);*/
                             bw.Write(Convert.ToByte(buffer , 2));
                             buffer = "";
                         }
@@ -517,7 +514,6 @@ namespace ImageEncryptCompress
                         buffer += value[k];
                         if (buffer.Length == 8)
                         {
-                            /*Console.WriteLine("buffer: {0}", buffer);*/
                             bw.Write(Convert.ToByte(buffer, 2));
                             buffer = "";
                         }
@@ -528,14 +524,10 @@ namespace ImageEncryptCompress
                         buffer += value[k];
                         if (buffer.Length == 8)
                         {
-                            /*Console.WriteLine("buffer: {0}", buffer);*/
                             bw.Write(Convert.ToByte(buffer, 2));
                             buffer = "";
                         }
                     }
-                    /*bw.Write(Convert.ToByte(int.Parse(redCodes[ImageMatrix[i, j].red.ToString()])));
-                    bw.Write(Convert.ToByte(int.Parse(greenCodes[ImageMatrix[i, j].green.ToString()])));
-                    bw.Write(Convert.ToByte(int.Parse(blueCodes[ImageMatrix[i, j].blue.ToString()])));*/
                 }
             }
             if(buffer.Length > 0)
@@ -557,8 +549,6 @@ namespace ImageEncryptCompress
         /// <param name="br"></param>
         public static List<Node> Load(ref string InitialSeed, ref int TapPosition, string path,ref string compressedImage,List<string> byteBlock, ref int Height, ref int Width)
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
 
             FileStream fs = new FileStream(path, FileMode.Open);
             BinaryReader br = new BinaryReader(fs);
@@ -575,20 +565,22 @@ namespace ImageEncryptCompress
             short count = Convert.ToInt16(br.ReadByte());
             for (short i = 0; i <= count; i++)
             {
-                /*redCodes[br.ReadString()] = br.ReadByte().ToString();*/
                 Node node = new Node(br.ReadInt32(), br.ReadByte().ToString());
                 redQueue.Enqueue(node);
             }
+
+
             count = Convert.ToInt16(br.ReadByte());
             for (short i = 0; i <= count; i++)
             {
                 Node node = new Node(br.ReadInt32(), br.ReadByte().ToString());
                 greenQueue.Enqueue(node);
             }
+
+
             count = Convert.ToInt16(br.ReadByte());
             for (short i = 0; i <= count; i++)
             {
-                /*blueCodes[br.ReadString()] = br.ReadByte().ToString();*/
                 Node node = new Node(br.ReadInt32(), br.ReadByte().ToString());
                 blueQueue.Enqueue(node);
             }
@@ -602,14 +594,17 @@ namespace ImageEncryptCompress
                 redQueue.Enqueue(node);
 
             }
+
+
             while (blueQueue.Size > 1)
             {
                 Node right = blueQueue.ExtractMin();
                 Node left = blueQueue.ExtractMin();
                 Node node = new Node(left.frequency + right.frequency, "?", left, right);
                 blueQueue.Enqueue(node);
-
             }
+
+
             while (greenQueue.Size > 1)
             {
 
@@ -619,77 +614,38 @@ namespace ImageEncryptCompress
                 greenQueue.Enqueue(node);
 
             }
-            /*StringBuilder sb= new StringBuilder();*/
 
             Height = br.ReadInt32();
-            
             Width = br.ReadInt32();
             byte bits = br.ReadByte();
-            sw.Stop();
-            Console.WriteLine("The First Part of Load Time elapsed: {0:hh\\:mm\\:ss\\:fff}", sw.Elapsed);
-            sw.Restart();
-            // O(N^2)
-            /*while (br.BaseStream.Position != br.BaseStream.Length)
-            {
-                sb.Append(Convert.ToString(br.ReadByte(), 2).PadLeft(8, '0'));
-            }*/
 
-            /*const int ChunkSize = 4096;
-            byte[] buffer = new byte[ChunkSize];
-            int bytesRead;*/
             StringBuilder sb = new StringBuilder();
-            /*byte[] bytes = Encoding.ASCII.GetBytes(sb.ToString());*/
             long remainingLength = br.BaseStream.Length - br.BaseStream.Position;
-            /*bytes = new byte[remainingLength];*/
-            /*byteBlock = new List<string>();*/
-            /*int index = 0;
-            Console.WriteLine("The remainig: {0} :   {1}", remainingLength, remainingLength % 4096);*/
-            /*while ((bytesRead = br.BaseStream.Read(buffer, 0, ChunkSize)) > 0)
-            {
-                
-                for (int i = 0; i < bytesRead; i++)
-                {
-                    *//*bytes[index * ChunkSize + i] = buffer[i];*//*
-                    byteBlock.Add(Convert.ToString(buffer[i], 2).PadLeft(8, '0'));
-                    *//*sb.Append(Convert.ToString(buffer[i], 2).PadLeft(8, '0'));*/
-            /*Console.WriteLine(compressedImage.Length);
-            compressedImage += Convert.ToString(buffer[i], 2).PadLeft(8, '0');*//*
-        }
-    }
-    Console.WriteLine("Buffer: {0}", Convert.ToString(buffer[buffer.Length - 1], 2));
-    byteBlock.RemoveAt(byteBlock.Count - 1);
-    byteBlock.Add(Convert.ToString(buffer[buffer.Length - 1], 2));*/
 
-            /*sb.Remove(start, length);*/
             for (long i = remainingLength -1; i >= remainingLength / 2; i--)
             {
                 sb.Append(Convert.ToString(br.ReadByte(), 2).PadLeft(8, '0'));
             }
             byteBlock.Add(sb.ToString());
             sb.Clear();
+
+
             for(long i = (remainingLength / 2) - 1; i >= 0; i--)
             {
                 sb.Append(Convert.ToString(br.ReadByte(), 2).PadLeft(8, '0'));
             }
+            
             int start = sb.Length - 8;
             int length = 8 - bits;
-            Console.WriteLine("start: {2} Length: {0} bits: {1}", length, bits, start);
-            Console.WriteLine("Sb length before: {0}", sb.Length);
-            sb.Remove(start, length);
-            Console.WriteLine("Sb length after: {0}", sb.Length);
+            if (bits != 0)
+            {
+                sb.Remove(start, length);
+            }
             byteBlock.Add(sb.ToString());
             br.Close();
             fs.Close();
 
-            Console.WriteLine("The Second Part (Before) of Load Time elapsed: {0:hh\\:mm\\:ss\\:fff}", sw.Elapsed);
 
-            /*compressedImage = sb.ToString(0,sb.Length/2);
-            string compressed2 = sb.ToString(sb.Length / 2, sb.Length - (sb.Length / 2));
-            compressedImage += compressed2; */
-            /*Console.WriteLine(bytes[0]);*/
-
-            sw.Stop();
-            Console.WriteLine("The Second Part (After) of Load Time elapsed: {0:hh\\:mm\\:ss\\:fff}", sw.Elapsed);
             List<Node> list = new List<Node>();
             list.Add(redQueue.ExtractMin());
             list.Add(greenQueue.ExtractMin());
@@ -710,11 +666,9 @@ namespace ImageEncryptCompress
             int Width = 0;
             byte[] bytes = new byte[1];
             List<string> byteBlock = new List<string>();
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
             List<Node> list = Load(ref InitialSeed, ref TapPosition, path, ref compressedImage, byteBlock, ref Height, ref Width);
-            sw.Stop();
-            Console.WriteLine("Load Time elapsed: {0:hh\\:mm\\:ss\\:fff}", sw.Elapsed);
+            
+
             return Decompression(list[0], list[1], list[2], compressedImage, Height, Width, byteBlock);
         }
         /// <summary>

@@ -38,11 +38,9 @@ namespace ImageEncryptCompress
         {
             TapPostion = (int)nudMaskSize.Value ;
             InitialSeed = txtGaussSigma.Text;
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+
             ImageMatrix = ImageOperations.Encryption_Decryption(ImageMatrix, TapPostion, InitialSeed);
-            sw.Stop();
-            Console.WriteLine("Encryption Time elapsed: {0:hh\\:mm\\:ss\\.fff}", sw.Elapsed);
+            
             ImageOperations.DisplayImage(ImageMatrix, pictureBox2);
         }
 
@@ -53,12 +51,9 @@ namespace ImageEncryptCompress
             {
                 //Open the browsed image and display it
                 string OpenedFilePath = openFileDialog2.FileName;
-                Stopwatch sw = new Stopwatch();
-                sw.Start();
                 ImageMatrix = ImageOperations.Load_Decompression(OpenedFilePath, ref InitialSeed, ref TapPostion);
                 ImageOperations.DisplayImage(ImageMatrix, pictureBox1);
-                sw.Stop();
-                Console.WriteLine("Load & Decompression Time elapsed: {0:hh\\:mm\\:ss\\:fff}", sw.Elapsed);
+                
             }
             txtWidth.Text = ImageOperations.GetWidth(ImageMatrix).ToString();
             txtHeight.Text = ImageOperations.GetHeight(ImageMatrix).ToString();
@@ -66,21 +61,16 @@ namespace ImageEncryptCompress
    
         private void button1_Click(object sender, EventArgs e)
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+            
             ImageMatrix = ImageOperations.Encryption_Decryption(ImageMatrix, TapPostion, InitialSeed);
             ImageOperations.DisplayImage(ImageMatrix, pictureBox2);
-            sw.Stop();
-            Console.WriteLine("Decryption Time elapsed: {0:hh\\:mm\\:ss\\:fff}", sw.Elapsed);
+            
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
             saveFileDialog1.Filter = "bmp files (.bmp)|.bmp|All files (.)|.";
             saveFileDialog1.RestoreDirectory = true;
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                sw.Restart();
                 pictureBox2.Image.Save(saveFileDialog1.FileName, ImageFormat.Bmp);
-                sw.Stop();
-                Console.WriteLine("Save as bmp Time elapsed: {0:hh\\:mm\\:ss\\:fff}", sw.Elapsed);
             }
         }
 
